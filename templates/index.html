@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Eligibility Prediction</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Loan Eligibility Prediction</h1>
+    <label for="loan_amount">Loan Amount:</label>
+    <input type="text" id="loan_amount" />
+    <br><br>
+    <label for="applicant_income">Applicant Income:</label>
+    <input type="text" id="applicant_income" />
+    <br><br>
+    <label for="coapplicant_income">Co-applicant Income:</label>
+    <input type="text" id="coapplicant_income" />
+    <br><br>
+    <label for="loan_term">Loan Term (in months):</label>
+    <input type="text" id="loan_term" />
+    <br><br>
+    <button onclick="predictLoanEligibility()">Predict</button>
+    <br><br>
+    <div id="result"></div>
+
+    <script>
+        function predictLoanEligibility() {
+            var loanAmount = document.getElementById("loan_amount").value;
+            var applicantIncome = document.getElementById("applicant_income").value;
+            var coapplicantIncome = document.getElementById("coapplicant_income").value;
+            var loanTerm = document.getElementById("loan_term").value;
+
+            var data = {
+                "loan_amount": parseFloat(loanAmount),
+                "applicant_income": parseFloat(applicantIncome),
+                "coapplicant_income": parseFloat(coapplicantIncome),
+                "loan_term": parseFloat(loanTerm)
+            };
+
+            $.ajax({
+                url: "http://localhost:5000/predict",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function(response) {
+                    var prediction = response.prediction;
+                    var result = document.getElementById("result");
+                    result.innerHTML = "Loan Eligibility: " + prediction;
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
